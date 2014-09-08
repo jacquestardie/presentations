@@ -1,0 +1,224 @@
+<!DOCTYPE html><html><head><title></title><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" /><style type='text/css'>
+body {
+  font-family: 'Helvetica';
+  background:#222;
+  background-size:100%;
+  color:#f3f3f3;
+  margin:0;
+  padding:0;
+  font-weight:bold;
+}
+
+h1, h2, h3, p { margin:0; }
+
+em, a {
+  font-style:normal;
+  color:#8dbd0c;
+}
+
+a {
+  background: #333;
+	color:#FFC52F;
+  text-decoration:none;
+}
+
+img { width:100%; }
+
+div {
+  cursor:pointer;
+  cursor:hand;
+  position:absolute;
+  top:0px;
+  left:0px;
+  padding:75px;
+	line-height: 1.2;
+}
+
+div.center { text-align:center; }
+div.imageText { text-shadow:0px 0px 5px rgba(0,0,0,0.2); }
+</style><script type='text/javascript'>
+window.onload = function() {
+    var s = document.getElementsByTagName('div'), ti;
+    if (!s) return;
+    big = { current: 0, forward: fwd, reverse: rev, go: go, length: s.length };
+    function go(n) {
+        big.current = n;
+        var i = 1e3, e = s[n], t = parseInt(e.dataset.timeToNext || 0, 10);
+        document.body.className = e.dataset.bodyclass || '';
+        for (var k = 0; k < s.length; k++) s[k].style.display = 'none';
+        e.style.display = 'inline';
+        e.style.fontSize = i + 'px';
+        if (e.firstChild && e.firstChild.nodeName === 'IMG') {
+            document.body.style.backgroundImage = 'url(' + e.firstChild.src + ')';
+            e.firstChild.style.display = 'none';
+            if ('classList' in e) e.classList.add('imageText');
+        } else {
+            document.body.style.backgroundImage = '';
+            document.body.style.backgroundColor = e.style.backgroundColor;
+        }
+        if (ti !== undefined) window.clearInterval(ti);
+        if (t > 0) ti = window.setTimeout(fwd, (t * 1000));
+        while ((e.offsetWidth > window.innerWidth ||
+            e.offsetHeight > window.innerHeight) && i >= 0) {
+            e.style.fontSize = (i -= 2) + 'px';
+        }
+        e.style.marginTop = ((window.innerHeight - e.offsetHeight) / 2) + 'px';
+        if (window.location.hash !== n) window.location.hash = n;
+        document.title = e.textContent || e.innerText;
+    }
+    document.onclick = function() { go(++big.current % (s.length)); };
+    function fwd() { go(Math.min(s.length - 1, ++big.current)); }
+    function rev() { go(Math.max(0, --big.current)); }
+    document.onkeydown = function(e) {
+        if (e.which === 39 || e.which === 34 || e.which === 40) fwd();
+        if (e.which === 37 || e.which === 33 || e.which === 38) rev();
+    };
+    document.ontouchstart = function(e) {
+        var x0 = e.changedTouches[0].pageX;
+        document.ontouchend = function(e) {
+            var x1 = e.changedTouches[0].pageX;
+            if (x1 - x0 < 0) fwd();
+            if (x1 - x0 > 0) rev();
+        };
+    };
+    function parse_hash() {
+        return Math.max(Math.min(s.length - 1,
+            parseInt(window.location.hash.substring(1), 10)), 0);
+    }
+    if (window.location.hash) big.current = parse_hash() || big.current;
+    window.onhashchange = function() {
+        var c = parse_hash();
+        if (c !== big.current) go(c);
+    };
+    go(big.current);
+};
+</script></head><body>
+
+<!-- INTRODUCTION -->
+
+<div>use ↔ to navigate</div>
+<div>Follow along at <a href='#'>2014-09-megug-openstreetmap</a></div>
+
+<div><img src='https://raw.githubusercontent.com/jacquestardie/gifs/master/wave.gif' />Hi!</div>
+<div>
+	<ul>
+		<li><a href='http://twitter.com/jqtrde'>@jqtrde</a></li>
+		<li><a href='http://maptime.io'>Maptime</a></li>
+		<li><a href='http://code4maine.org'>Code for Maine</a></li>
+	</ul>
+</div>
+
+<div>OpenStreetMap</div>
+
+<div>Questions</div>
+<div>Who has <em>heard</em> of OSM?</div>
+<div>Who has <em>used</em> OSM?</div>
+<div>Who has <em>contributed</em> to OSM?</div>
+
+<div><img src='https://raw.githubusercontent.com/jacquestardie/gifs/master/hurry-up.gif' />The plan</div>
+<div>
+	<ul>
+		<li><em>Talk</em> about OSM</li>
+		<li><em>Do</em> OSM</li>
+	</ul>
+</div>
+
+
+
+<!-- BASICS -->
+
+<div>What is OSM?</div>
+
+<div>An open source Google Maps clone?</div>
+<div><img src='https://raw.githubusercontent.com/jacquestardie/gifs/master/no.gif' /> No</div>
+<div>A portal?</div>
+<div><img src='https://raw.githubusercontent.com/jacquestardie/gifs/master/sigh.gif' /> lol</div>
+
+<div>The Wikipedia of Maps?</div>
+
+<div>What makes OSM unique</div>
+<div>
+	<ul>
+		<li><em>Local Knowledge</em> - Edit what you know.</li>
+		<li><em>Comunity driven</em> - Enthusiasts, GISers, Developers, etc.</li>
+		<li><em>Open Data</em></li>
+	</ul>
+</div>
+<div><img src='http://wiki.openstreetmap.org/wiki/File:Osmdbstats1_users.png' /></div>
+
+
+<!-- EXAMPLES -->
+<div><img src='https://i.imgur.com/t6qxtUy.jpg' /> <a href='http://openstreetmap.org'>OSM.org</a></div>
+
+<div><img src='https://farm4.staticflickr.com/3724/9917930106_ba56baeb35_o.gif' />NYC</div>
+<div><a href='https://www.mapbox.com/blog/nyc-and-openstreetmap-cooperating-through-open-data/'>"This move effectively makes the largest municipality in the United States an OpenStreetMap participant."</a></div>
+
+<div><a href='http://hotosm.org'>HotOSM</a></div>
+<div>Humanitarian OpenStreetMap Team</div>
+<div><a href='http://mapgive.state.gov/learn-to-map'>Mapgive</a></div>
+<div><a href='http://tasks.hotosm.org'>HotOSM Tasks</a></div>
+<div><em>Ebola</em></div>
+<div><img src='https://i.imgur.com/Zc8tEpk.gif' /></div>
+
+<div><a href='http://www.telenav.com/about/pr/pr-20140519.html'>Telenav Scout</a></div>
+<div>"As a mapping platform, OSM is a credible alternative to proprietary solutions, with the added advantage of instant updates, resulting in a more accurate and up-to-date map."</div>
+<div><a href='http://www.asymco.com/2012/12/18/how-much-to-maps-cost-and-what-are-they-worth/'</a>$1 billion.</div>
+<div><em>Annually!!!</em></div>
+<div><img src='https://raw.githubusercontent.com/jacquestardie/gifs/master/fascinating.gif' /></div>
+<div><a href='https://osmlab.github.io/show-me-the-way://osmlab.github.io/show-me-the-way/'>Constant updates</a></div>
+<div><img src='http://jacquestardie.org/portland-webdev-osm-presentation/change.png'/></div>
+<div><a href='https://mvexel.github.io/thenandnow/#11/52.2314/5.2583'>2007 to 2014</a></div>
+
+<!-- USING THE DATA -->
+<div>Want the data?</div>
+
+<div>With your existing desktop apps</div>
+<div><a href='http://wiki.openstreetmap.org/wiki/ArcGIS_Editor_for_OSM'>ArcGIS Extension</a></div>
+<div><a href='http://wiki.openstreetmap.org/wiki/QGIS#QGIS2_OpenStreetMap_Vectors'>Core in QGIS</a></div>
+
+<div>Extracts</div>
+<div><a href='https://mapzen.com/metro-extracts'>Mapzen Metro Extracts</a></div>
+<div><a href='http://download.geofabrik.de'>Geofabrik</a></div>
+
+<div>Queries</div>
+<div><a href='http://overpass-turbo.eu'>Overpass Turbo</a></div>
+
+
+<!-- CONTRIBUTING -->
+<div><a href='http://www.openstreetmap.org/#map=13/44.3817/-68.0550'>Id Editor</a></div>
+<div><img src='https://maptime.github.io/osm-101/sf_cityhall_editing_josm.png' /><a href='https://josm.openstreetmap.de/'>JOSM</a></div>
+<div><a href='http://maproulette.org/'>MapRoulette</a></div>
+<div><img src='https://maptime.github.io/osm-101/maproulette.png' /></div>
+<div><a href='http://wiki.openstreetmap.org/wiki/Import/Guidelines'>Bulk imports</a></div>
+
+
+
+<!-- ADDITIONAL RESOURCES -->
+<div><a href='http://learnosm.org/en/'>LearnOSM</a></div>
+<div><a href='http://wiki.openstreetmap.org/wiki/Main_Page'>Wiki</a></div>
+<div><a href='https://help.openstreetmap.org/'>Help</a></div>
+<div><a href='http://maptime.io/'>Maptime!</a></div>
+
+
+
+<!-- SPIRITUAL PARTNERS -->
+<div><em>Spiritual partners</em></div>
+<div>
+	<ul>
+		<li><a href='http://leafletjs.com/'>Leaflet</a></li>
+		<li><a href='https://www.mapbox.com/tilemill/'>Tilemill</a></li>
+		<li><a href='https://www.mapbox.com/tilemill/docs/guides/osm-bright-mac-quickstart/'>Postgres</a></li>
+		<li><a href='http://www.qgis.org/en/site/'>QGIS</a></li>
+	</ul>
+</div>
+
+
+
+<!-- ALSO -->
+<div><img src='http://38.media.tumblr.com/tumblr_m435spgaD91rul4ooo1_500.png' /></div>
+<div><a href='http://worstofosm.tumblr.com/'>Worst of OSM</a></div>
+<div><a href='http://hdyc.neis-one.org'>How do you contribute?</a></div>
+
+
+
+<div><img src='https://raw.githubusercontent.com/jacquestardie/gifs/master/enlightenment.gif' />Thanks!</div>
