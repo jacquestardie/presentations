@@ -17,8 +17,6 @@ export { swiss as theme } from 'mdx-deck/themes'
 - TODO: Try to integrate RoboSat with LabelMaker
 ```
 
-## Robosat
-
 ![](https://gist.githubusercontent.com/daniel-j-h/20f4c668f683336764041a9a5eab7b1e/raw/124ee3d7d7628c1d60d3609d0b6515995ed2781d/pipeline.gif)
 
  🙏  [Daniel](https://github.com/daniel-j-h) and [Bhargav](https://github.com/bkowshik/).
@@ -41,12 +39,12 @@ You need to bring imagery and masks.
 
 ---
 
-# Utility of this work
+# Why did we think this was interesting?
 
-- [OSM changeset](https://wiki.openstreetmap.org/wiki/Changeset) validation.
-- Locate features which should be mapped.
-- Determine map compeletion for specific features in specific regions.
-- Integration/enhancement of existing processing piplines.
+- Streamline [OSM changeset](https://wiki.openstreetmap.org/wiki/Changeset) validation.
+- Identify unmapped features in OSM.
+- Help to quantify map completion for particular features.
+- Enhancement of our existing processing piplines.
 
 ```notes
 RoboSat can "look" at every edit in OpenStreetMap in real-time to flag suspicious changesets. At the same time it can help to let good looking changesets go through without manual verification.
@@ -60,7 +58,7 @@ RoboSat can be integrated into imagery platforms like OpenAerialMap or toolchain
 
 # Network architecture
 
-- [U-net](https://arxiv.org/abs/1505.04597)
+- [U-Net](https://arxiv.org/abs/1505.04597)
 - [ResNet](https://arxiv.org/abs/1512.03385) 50 encoder, symmetrical decoder.
 
 Previously:
@@ -80,11 +78,15 @@ We follow the 80/20 rule where 80% of the effects come from 20% of the causes: w
 
 The encoder turns the image into a fixed size feature vector.
 The decoder turns those features back into full-resolution masks.
+
 Skip connections link encoder blocks deeper into the decoder, so that more of the high resolution information can be passed through. Without these connections, it would be much harder to decode the encoder's last output on it's own.
+
+
+PSPNet
 
 Good for multiclass detections, and it's "context block" allows for the network to understand that if it identifies roads, it's then more likely to also detect cars, and less likely to detect water. Training and prediction were both very slow.
 
-FPNs are similar to u-nets. Channel addition rather than concatenation. FPN is commonly used as a base for other state-of-the-art networks.
+FPNs are similar to u-nets. Channel addition rather than concatenation. FPN is commonly used as a base for other state-of-the-art networks, like RetinaNet.
 ```
 
 ---
@@ -93,6 +95,8 @@ FPNs are similar to u-nets. Channel addition rather than concatenation. FPN is c
 
 RoboSat is data agnostic so long as your imagery can be transformed into a [slippy map format](https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames).
 
+An API will make your life simpler though!
+
 - [mapbox.satellite](https://www.mapbox.com/maps/satellite/)
 - [OpenAerialMap](https://openaerialmap.org/)
 - [DigitalGlobe](https://platform.digitalglobe.com/maps-api/)
@@ -100,11 +104,6 @@ RoboSat is data agnostic so long as your imagery can be transformed into a [slip
 - 💁‍♂️
 
 
-An API will make your life simpler.
-
-```sh
-https://a.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token={token}
-```
 
 ```notes
 Your source is going to impact the features you can predict. Higher zoom, smaller features.
@@ -169,9 +168,9 @@ Given our time, this is what I recommend doing today.
 
 ---
 
-## Option 3: Something else
+## Option X: Something else
 
-We've used Nvidia GTX 1080 TIs and AWS' p2 & p3 instances. I'm interested in getting this running on SageMaker. Lots of options.
+We've used Nvidia GTX 1080 TIs and AWS' p2 & p3 instances.
 
 If you want to train efficiently, you'll want a GPU.
 
@@ -196,7 +195,7 @@ rs download
 Download tiles from a map endpoint
 
 rs rasterize
-Rasterize the GeoJSON features which you're interested in predicting into mask images which we'll train our model with.
+Rasterize the GeoJSON features which you're interested in predicting into masks which we'll train our model with.
 ```
 
 ---
@@ -245,46 +244,12 @@ We're going to follow along with Daniel's OSM Diary entry, [RoboSat loves Tanzan
 
 And we're going to skip all the way ahead to the training section.
 
-```notes
-Data went out via USB drive
-
-TODO: Describe contents - folder structure post `rs rasterize`
+Here's a [preview](https://s3.amazonaws.com/robosat-public/28f28ffa-6b4e-46ee-91dc-a6404790a491/probabilities2/index.html#18.5/-6.1933296/39.2698587
+) of what we're going to try and build.
 
 ```
-
----
-
-## 
-
-```notes
-TODO: Provide intermediate data
-```
-
----
-
-# Examples: OSM Diaries
-
-Daniel's introductory post, [RoboSat - robots at the edge of space!](https://www.openstreetmap.org/user/daniel-j-h/diary/44145)
-
-[RoboSat loves Tanzania](https://www.openstreetmap.org/user/daniel-j-h/diary/44321)
-
-- Associated tmp data `s3://mapbox/playground/danieljh/tanzania/`
-- OAM drone images, probabilities, masks `s3://robosat-public/28f28ffa-6b4e-46ee-91dc-a6404790a491/`
-- Raster tile endpoint (chrome-only) - `https://s3.amazonaws.com/robosat-public/28f28ffa-6b4e-46ee-91dc-a6404790a491/probabilities2/index.html#18.5/-6.1933296/39.2698587`
-
-[maning's - Data preparation for feature detection with RoboSat](https://www.openstreetmap.org/user/maning/diary/44462)
-
----
-
-
-```notes
-The encoder turns the image into a fixed size feature vector.
-The decoder turns those features back into full-resolution masks.
-Skip connections link encoder blocks deeper into the decoder, so that more of the high resolution information can be passed through. Without these connections, it would be much harder to decode the encoder's last output on it's own.
-
-Good for multiclass detections, and it's "context block" allows for the network to understand that if it identifies roads, it's then more likely to also detect cars, and less likely to detect water. Training and prediction were both very slow.
-
-FPNs are similar to u-nets. Channel addition rather than concatenation. FPN is commonly used as a base for other state-of-the-art networks.
+# data on S3
+s3://robosat-public/28f28ffa-6b4e-46ee-91dc-a6404790a491/
 ```
 
 ---
